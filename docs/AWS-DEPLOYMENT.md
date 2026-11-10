@@ -2,7 +2,9 @@
 
 ## Current status
 
-The app has a Docker build and an EC2 service configuration. It is not deployed to AWS yet. An AWS account, instance, and public HTTPS hostname have not been created. No AWS credentials are needed in the app or its GitHub repository.
+On 11 November 2026, the app was installed and verified privately on an Amazon Linux 2023 t3.micro instance in Sydney. ZIP analysis and a live GitHub analysis of AltF4 passed on EC2. The app container is healthy. Public HTTPS is prepared but still awaits the EC2 inbound HTTP/HTTPS rules and successful certificate issuance. No AWS credentials are needed in the app or its GitHub repository.
+
+The initial hostname selected for the demo is `explain-codebase.13-54-188-194.sslip.io`. It resolves to the current public IP without domain registration. The public URL must change if the instance receives a different public IP after stop/start. This is a shared DNS service, not a personally registered domain. See [the DNS provider's explanation](https://sslip.io/).
 
 ## The simple picture
 
@@ -53,6 +55,28 @@ Do not create a load balancer, NAT gateway, database, or paid DNS zone for this 
 This makes start/stop suitable for scheduled demonstrations. A resume link will be unavailable while the server is stopped; retain a short demo recording and screenshots for that case.
 
 ## 3. Install and verify privately first
+
+### Actual instance: Amazon Linux 2023
+
+The created instance uses Amazon Linux 2023, with login user `ec2-user`. On that OS, use `deploy/aws/setup-amazon-linux.sh` from this repository. Run it as `ec2-user` after inspecting it. It installs Amazon's Docker/Git packages, enables Docker on boot, installs official Docker Compose v2.40.3 after checking its published SHA-256 checksum, clones/pulls this repository, builds within a 512 MiB memory limit, starts the app on loopback, and runs ZIP/AltF4 checks.
+
+```bash
+bash deploy/aws/setup-amazon-linux.sh
+```
+
+This script was executed successfully on the instance. Docker's Amazon Linux package uses the older built-in image builder; the script explicitly selects it because Buildx is not installed. It emits a deprecation notice. This is a compatibility step for this host; migrate to a maintained Buildx setup when upgrading Docker. The manually installed Compose plugin also requires deliberate updates.
+
+The measured app memory at idle was about 41 MiB; the HTTPS proxy used about 14 MiB. These are observations, not peak-memory guarantees. After installation/build, about 5.5 GiB remained free on the 8 GiB root volume. No instance resize, extra volume, Elastic IP, or paid domain was created.
+
+For this instance, the private browser connection from Windows uses:
+
+```powershell
+ssh -i "D:\aws\explainthecodebase.pem" -N -L 10001:127.0.0.1:10000 ec2-user@ec2-13-54-188-194.ap-southeast-2.compute.amazonaws.com
+```
+
+Then open http://127.0.0.1:10001/ while keeping that terminal open. Update the destination after an EC2 public IP change. The key remains outside the repository. Its Windows file permissions were restricted to the user's account, and its server host fingerprint was matched against the EC2 browser terminal before SSH login.
+
+### Alternative OS: Ubuntu
 
 After launch, connect from PowerShell using your actual private-key path and current public IP. The `ubuntu` username applies to the proposed Ubuntu image:
 
@@ -156,4 +180,4 @@ The app container has a 512 MiB memory cap, a process limit, a read-only filesys
 
 ## Verification boundary
 
-The repository's local verification and GitHub Actions results are separate from AWS verification. Windows can test the app and compiled-site serving, but Docker is not installed on this workstation. The Actions container job must succeed before relying on the Linux image. EC2 launch, DNS, certificate issuance, instance resource behavior, public browser checks, and a real stop/start cycle remain to be verified after account setup.
+The repository's local verification and GitHub Actions results are separate from AWS verification. The Linux CI container check succeeded before EC2 setup. On EC2, the compiled site/assets, real ZIP worker, impact results, error responses, cache headers, and AltF4 download all passed. DNS resolves to the instance. The app is healthy, but external connections to ports 80/443 timed out; the certificate authority reported the same timeout. The HTTPS proxy was paused to avoid repeated certificate attempts while inbound rules are configured. Start it with the public Compose command after allowing those two web ports. Certificate issuance, public browser checks, and a real stop/start cycle remain to be verified.

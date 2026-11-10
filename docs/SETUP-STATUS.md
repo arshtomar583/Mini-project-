@@ -39,3 +39,7 @@ The dependency map is now connected to file details, with whole-project, immedia
 ## AWS preparation milestone
 
 The selected host is AWS EC2, started for demonstrations and stopped afterward. A Docker build, bounded Compose service, optional Caddy HTTPS proxy, compiled-frontend serving, service-wide rate cap, deployment smoke checker, and GitHub Actions workflow are prepared. The local backend suite has 59 passing tests and the frontend has eight. Account creation, an instance, hostname setup, and live EC2 verification remain. See AWS-DEPLOYMENT.md; no AWS resources have been created.
+
+## EC2 private deployment, 11 November 2026
+
+The user created an Amazon Linux 2023 t3.micro instance in Sydney. SSH login works after restricting the Windows private-key ACL and verifying the server fingerprint. Docker, Git, and checksum-verified Compose are installed; the built app is healthy on server loopback port 10000. The deployed smoke checker passed ZIP and live AltF4 analysis (53 files, 167 edges). The selected free hostname resolves correctly. Public HTTPS awaits inbound HTTP/HTTPS rules and a valid certificate; the proxy is paused while that is configured. See AWS-DEPLOYMENT.md for the actual OS instructions and stop/start implications.
