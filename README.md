@@ -4,7 +4,7 @@ Under development. A tool for exploring Python project structure, import depende
 
 ## Current status
 
-Initial project structure with a FastAPI health endpoint and a React welcome screen. Uploads, AST analysis, graphs, and AI explanations are not implemented yet.
+Working local AST analyzer, a FastAPI health endpoint, and a React welcome screen. The analyzer extracts named functions, classes, imports, and source locations. Uploads, import resolution, graphs, and AI explanations are not implemented yet.
 
 ## Structure
 
@@ -55,6 +55,18 @@ The first release will accept Python ZIP uploads, extract definitions and local 
 
 Uploaded code must never be executed. Before enabling uploads, implement safe extraction, file and size limits, and temporary-file cleanup.
 
+## Run the first analyzer
+
+From the project folder:
+
+```powershell
+cd backend
+.venv/Scripts/python.exe -m app.analyzer ../examples/demo_project
+.venv/Scripts/python.exe -m unittest discover -s tests -v
+```
+
+Expected demo totals: 3 files, 3 functions, 0 classes, 2 import statements, 0 errors. See [the walkthrough](docs/FIRST-ANALYZER.md) for explanations and limitations.
+
 ## Next step
 
-Build a small analyzer that reads the example project with Python's `ast` module and reports files, functions, classes, and imports with source locations.
+Resolve import statements to local Python files, then construct the dependency graph.
