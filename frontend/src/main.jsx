@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
+
+const DependencyGraph = lazy(() => import('./DependencyGraph.jsx'));
 
 function App() {
   const [mode, setMode] = useState('github');
@@ -139,6 +141,9 @@ function App() {
           <details><summary>View source errors</summary><ul>{report.errors.map((item, index) => <li key={index}>{item.path}{item.line ? `, line ${item.line}` : ''}: {item.message}</li>)}</ul></details>
         </div>}
         {report.summary.unresolved_imports > 0 && <p className="notice">{report.summary.unresolved_imports} imported names were not matched locally. These may include Python libraries, installed packages, or unsupported imports; they are not automatically errors.</p>}
+        <Suspense fallback={<p role="status">Loading the dependency map…</p>}>
+          <DependencyGraph report={report} selected={selected} onSelect={setSelected} />
+        </Suspense>
         <div className="explorer">
           <aside className="file-panel" aria-label="Project files"><h3>Files</h3>
             <label className="sr-only" htmlFor="file-search">Search files</label>
@@ -148,7 +153,7 @@ function App() {
             </li>)}</ul>
             {!report.files.some(item => item.path.toLowerCase().includes(search.toLowerCase())) && <p className="small muted">No matching files.</p>}
           </aside>
-          <article className="detail-panel" aria-label="Selected file details">
+          <article id="file-details" tabIndex={-1} className="detail-panel" aria-label="Selected file details">
             {selectedFile ? <><p className="eyebrow">SELECTED FILE</p><h3 className="file-title">{selectedFile.path}</h3>
               <div className="detail-columns">
                 <section><h4>Functions</h4>{selectedFile.functions.length ? <ul>{selectedFile.functions.map(item => <li key={`${item.qualified_name}-${item.line}`}><code>{item.qualified_name}()</code><span className="line">line {item.line}{item.is_async ? ' · async' : ''}</span></li>)}</ul> : <p className="small muted">No named functions found.</p>}</section>
@@ -166,7 +171,7 @@ function App() {
         <section className="cycle-panel"><h3>Circular dependency groups</h3>{report.circular_dependency_groups.length
           ? <ul>{report.circular_dependency_groups.map((group, index) => <li key={index}>{group.join(' ↔ ')}</li>)}</ul>
           : <p className="muted small">No circular groups found in the resolved file graph.</p>}
-          <p className="small muted">A group means its files can reach one another through import connections. It is not automatically a bug. Interactive graph visualization comes next.</p>
+          <p className="small muted">A group means its files can reach one another through import connections. It is not automatically a bug. Choose Circular groups in the map to explore these connections.</p>
         </section>
       </section>}
       <footer>Static analysis shows possible import relationships. It does not prove execution order or resolve every Python import.</footer>

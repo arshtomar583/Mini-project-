@@ -13,7 +13,7 @@
 2. Done: resolve supported local imports and construct a directed file graph.
 3. Done: calculate potential impact and circular dependency groups.
 4. Done: accept ZIP files and public GitHub snapshots with shared checked extraction and worker/input limits.
-5. In progress: React is connected to the API and shows a file explorer/results; interactive graph drawing is next.
+5. Done: React results explorer and interactive dependency map with shared file selection, zoom/pan, layout controls, focused connections, change impact, and circular-group views.
 6. Deploy, verify behavior, and document limitations.
 
 ## Git workflow

@@ -4,7 +4,7 @@
 
 The engine already reads a folder. These inputs prepare that folder: accept a ZIP, or download a public GitHub snapshot. Both use the same extraction checks, source-folder selection, engine, and cleanup. No project code is executed.
 
-React now offers both input methods, an AltF4 example button, loading/errors, counts, file search, definitions with line numbers, imports/importers, potential impact, circular groups, and JSON report download. The interactive graph drawing comes next.
+React now offers both input methods, an AltF4 example button, loading/errors, counts, file search, definitions with line numbers, imports/importers, potential impact, circular groups, and JSON report download. These results also feed the [interactive dependency map](INTERACTIVE-GRAPH.md).
 
 ## Try it
 
@@ -87,4 +87,4 @@ The live GitHub output is saved locally at `output/reference/AltF4-github-api.js
 
 ## Next
 
-Draw the interactive graph using the existing nodes/edges and connect graph selection to file details. Public deployment follows integrated testing; call graphs and AI remain later work.
+The interactive graph is implemented using the existing nodes/edges and shared file selection. Public deployment follows integrated testing; call graphs and AI remain later work.

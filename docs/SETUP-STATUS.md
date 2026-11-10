@@ -30,4 +30,8 @@ VS Code initially showed a different clone at D:/Mini project/Mini-project-. It 
 
 ## Project-input milestone
 
-The earlier welcome-screen/input status is superseded: ZIP and public GitHub endpoints are implemented and connected to React. 53 tests pass; live ZIP/GitHub checks match the sample and AltF4 reference. Frontend build and dependency checks pass. See PROJECT-INPUTS.md for enforced limits, commands, cleanup, configuration, and deployment boundaries. Interactive graph drawing is next; the application is still local, not publicly deployed.
+The earlier welcome-screen/input status is superseded: ZIP and public GitHub endpoints are implemented and connected to React. 53 tests pass; live ZIP/GitHub checks match the sample and AltF4 reference. Frontend build and dependency checks pass. See PROJECT-INPUTS.md for enforced limits, commands, cleanup, configuration, and deployment boundaries.
+
+## Interactive map milestone
+
+The dependency map is now connected to file details, with whole-project, immediate-connection, impact, and circular-group views. Zoom, pan, dragging, layout selection, and keyboard file selection are available. Eight frontend graph tests and the production build pass. See INTERACTIVE-GRAPH.md for the walkthrough. The application is still local, not publicly deployed.

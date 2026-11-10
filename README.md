@@ -4,7 +4,7 @@ Under development. A tool for exploring Python project structure, import depende
 
 ## Current status
 
-The analysis engine, ZIP upload API, public GitHub snapshot API, and React input/results screen work locally. Users can inspect counts, definitions, file relationships, potential impact, and circular groups. Interactive graph visualization, public deployment, and AI explanations are not implemented yet.
+The analysis engine, ZIP upload API, public GitHub snapshot API, and React results explorer work locally. An interactive dependency map connects file selection to definitions, imports, potential impact, and circular groups. Public deployment and AI explanations are not implemented yet.
 
 ## Structure
 
@@ -47,7 +47,9 @@ npm run dev
 
 Open the local URL printed by Vite. The frontend proxies analysis requests to the backend on port 8000. Choose a ZIP or click **Use AltF4 example**, then **Analyze project**. See [project input instructions](docs/PROJECT-INPUTS.md) for limits, API details, and configuration.
 
-Use `Ctrl+C` in each terminal to stop its server. Run `npm run build` from `frontend` to check the production build. Commit `package-lock.json` so `npm ci` installs the same dependency versions.
+Use `Ctrl+C` in each terminal to stop its server. Run `npm test` and `npm run build` from `frontend` to check the graph behavior and production build. Commit `package-lock.json` so `npm ci` installs the same dependency versions.
+
+After analysis, explore the **Visual map**. Click a file box to select it, drag to rearrange or pan, and use the zoom/fit controls. Switch between the whole project, immediate connections, potential change impact, and circular groups. Larger projects start with immediate connections to keep the map readable. See [the graph walkthrough](docs/INTERACTIVE-GRAPH.md).
 
 ## Scope and limits
 
@@ -70,7 +72,7 @@ Expected demo totals: 3 files, 3 functions, 0 classes, 2 import statements, 2 lo
 
 ## Next step
 
-Add the interactive dependency graph and connect graph selection to file details, then prepare and verify public deployment.
+Prepare and verify public deployment of the connected input, analysis, and visual exploration workflow.
 
 ## Real-project reference check
 

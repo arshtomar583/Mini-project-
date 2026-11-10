@@ -86,10 +86,10 @@ The suite covers graph chains, diamonds, isolated files, duplicates, cycles, ove
 
 ## Completion boundary and next milestone
 
-This engine covers the first release's file/import features. ZIP/GitHub inputs and an analysis API are now connected; see PROJECT-INPUTS.md. An interactive map, function-call resolution, and AI business-purpose explanations remain later milestones.
+This engine covers the first release's file/import features. ZIP/GitHub inputs, an analysis API, and an interactive map are now connected; see PROJECT-INPUTS.md and INTERACTIVE-GRAPH.md. Function-call resolution and AI business-purpose explanations remain later milestones.
 
 Computing impact for every file needs a traversal per file and can produce quadratic output. The input API now bounds files, bytes, worker runtime, and report size; Linux workers also cap address space. The standalone CLI does not apply those input limits. Public hosting still needs its own memory/rate limits and production verification; see PROJECT-INPUTS.md.
 
-ZIP uploads and GitHub snapshots now feed the shared checked extraction/analysis workflow. React displays the results. Next: draw the interactive graph and connect graph selection to file details.
+ZIP uploads and GitHub snapshots feed the shared checked extraction/analysis workflow. React displays the results and connects graph selection to file details. Next: prepare and verify public deployment.
 
 The follow-up [review and AltF4 reference check](REVIEW-AND-REFERENCE.md) documents import edge-case fixes, the expanded 31-test suite, a pinned real-project snapshot, and a repeatable check command.
