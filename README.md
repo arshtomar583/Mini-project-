@@ -4,7 +4,7 @@ Under development. A tool for exploring Python project structure, import depende
 
 ## Current status
 
-The first local analysis engine is complete: AST structure, supported local imports, a file graph, potential change impact, and circular dependency groups. A FastAPI health endpoint and React welcome screen also exist. ZIP/GitHub inputs, an analysis API, interactive graph UI, and AI explanations are not implemented yet.
+The analysis engine, ZIP upload API, public GitHub snapshot API, and React input/results screen work locally. Users can inspect counts, definitions, file relationships, potential impact, and circular groups. Interactive graph visualization, public deployment, and AI explanations are not implemented yet.
 
 ## Structure
 
@@ -45,15 +45,15 @@ npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite. The welcome screen is independent of the API for now.
+Open the local URL printed by Vite. The frontend proxies analysis requests to the backend on port 8000. Choose a ZIP or click **Use AltF4 example**, then **Analyze project**. See [project input instructions](docs/PROJECT-INPUTS.md) for limits, API details, and configuration.
 
 Use `Ctrl+C` in each terminal to stop its server. Run `npm run build` from `frontend` to check the production build. Commit `package-lock.json` so `npm ci` installs the same dependency versions.
 
 ## Scope and limits
 
-The first release will accept Python ZIP uploads, extract definitions and local imports, display a module graph, and show potential impact through reverse dependency traversal. An arrow A -> B means A imports B. Static analysis does not prove execution order or guarantee that a dependent module will break.
+ZIP uploads and public GitHub default-branch snapshots feed the same engine. The input limit is 5 MiB compressed, 25 MiB extracted, and 200 Python files; other limits are documented in PROJECT-INPUTS.md. An arrow A -> B means A imports B. Static analysis does not prove execution order or guarantee that a dependent module will break.
 
-Uploaded code must never be executed. Before enabling uploads, implement safe extraction, file and size limits, and temporary-file cleanup.
+Uploaded code is read without execution. The API uses checked extraction, bounded requests, disposable analysis workers, and temporary-file cleanup. Hosting protections and public verification remain deployment work.
 
 ## Run the first analyzer
 
@@ -70,7 +70,7 @@ Expected demo totals: 3 files, 3 functions, 0 classes, 2 import statements, 2 lo
 
 ## Next step
 
-Add safe, bounded project ingestion for ZIP uploads and public GitHub default-branch snapshots, then connect the analysis API and visual interface. Both input methods will share extraction and analysis logic.
+Add the interactive dependency graph and connect graph selection to file details, then prepare and verify public deployment.
 
 ## Real-project reference check
 

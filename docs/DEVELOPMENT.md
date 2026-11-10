@@ -12,8 +12,8 @@
 1. Done: extract functions, classes, and imports with file and line locations.
 2. Done: resolve supported local imports and construct a directed file graph.
 3. Done: calculate potential impact and circular dependency groups.
-4. Next: accept ZIP files and public GitHub repository snapshots with shared safe extraction and resource limits.
-5. Connect React to the API and add a graph view.
+4. Done: accept ZIP files and public GitHub snapshots with shared checked extraction and worker/input limits.
+5. In progress: React is connected to the API and shows a file explorer/results; interactive graph drawing is next.
 6. Deploy, verify behavior, and document limitations.
 
 ## Git workflow

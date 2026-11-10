@@ -27,3 +27,7 @@ VS Code initially showed a different clone at D:/Mini project/Mini-project-. It 
 ## Follow-up review
 
 31 tests pass after fixing false import matches for dotted path components and missing namespace children. Frontend build, dependency consistency, package-registry audit, and live backend health checks passed at review time. AltF4 at commit 10a0bf44b2490104c61d2696290ea3ed27234dc1 is a pinned local reference: 53 Python files, 431 functions, 56 classes, and 167 local edges, with no parse/read errors. The source remains under ignored temp/AltF4. See REVIEW-AND-REFERENCE.md for scope and limitations.
+
+## Project-input milestone
+
+The earlier welcome-screen/input status is superseded: ZIP and public GitHub endpoints are implemented and connected to React. 53 tests pass; live ZIP/GitHub checks match the sample and AltF4 reference. Frontend build and dependency checks pass. See PROJECT-INPUTS.md for enforced limits, commands, cleanup, configuration, and deployment boundaries. Interactive graph drawing is next; the application is still local, not publicly deployed.

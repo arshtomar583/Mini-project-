@@ -86,10 +86,10 @@ The suite covers graph chains, diamonds, isolated files, duplicates, cycles, ove
 
 ## Completion boundary and next milestone
 
-This is a local engine for the first release's file/import features. It does not yet accept ZIP uploads or GitHub URLs, run behind an analysis API, display an interactive map, resolve function calls, or explain business purpose with AI.
+This engine covers the first release's file/import features. ZIP/GitHub inputs and an analysis API are now connected; see PROJECT-INPUTS.md. An interactive map, function-call resolution, and AI business-purpose explanations remain later milestones.
 
-Computing impact for every file needs a traversal per file and can produce quadratic output. Public input limits, worker time/memory limits, and response-size limits must be implemented before exposing it publicly. No public-upload safety claim is made here.
+Computing impact for every file needs a traversal per file and can produce quadratic output. The input API now bounds files, bytes, worker runtime, and report size; Linux workers also cap address space. The standalone CLI does not apply those input limits. Public hosting still needs its own memory/rate limits and production verification; see PROJECT-INPUTS.md.
 
-Next: add one controlled project-input workflow, with bounded safe extraction. ZIP uploads and public GitHub default-branch snapshots will feed that same workflow, followed by this engine. Then connect the React website to those results.
+ZIP uploads and GitHub snapshots now feed the shared checked extraction/analysis workflow. React displays the results. Next: draw the interactive graph and connect graph selection to file details.
 
 The follow-up [review and AltF4 reference check](REVIEW-AND-REFERENCE.md) documents import edge-case fixes, the expanded 31-test suite, a pinned real-project snapshot, and a repeatable check command.
