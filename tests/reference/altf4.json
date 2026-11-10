@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/nikhilbajantri/AltF4.git",
+  "commit": "10a0bf44b2490104c61d2696290ea3ed27234dc1",
+  "report_sha256": "2de3335b6095d84f464d653510b14e4f6abce363f70195508ab3eef6c8cd5806",
+  "summary": {
+    "files_found": 53,
+    "files_analyzed": 53,
+    "functions": 431,
+    "classes": 56,
+    "import_statements": 377,
+    "errors": 0,
+    "local_dependencies": 167,
+    "unresolved_imports": 336,
+    "circular_dependency_groups": 0,
+    "files_in_circular_groups": 0
+  }
+}

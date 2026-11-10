@@ -71,3 +71,7 @@ Expected demo totals: 3 files, 3 functions, 0 classes, 2 import statements, 2 lo
 ## Next step
 
 Add safe, bounded project ingestion for ZIP uploads and public GitHub default-branch snapshots, then connect the analysis API and visual interface. Both input methods will share extraction and analysis logic.
+
+## Real-project reference check
+
+AltF4 is our pinned public reference project. Run `backend/.venv/Scripts/python.exe scripts/check_altf4.py` from the project root after downloading the reference copy. See [the review and reference instructions](docs/REVIEW-AND-REFERENCE.md) for the snapshot, results, limitations, and setup commands. The reference source stays in ignored `temp/AltF4`; it is not bundled with our application.

@@ -91,3 +91,5 @@ This is a local engine for the first release's file/import features. It does not
 Computing impact for every file needs a traversal per file and can produce quadratic output. Public input limits, worker time/memory limits, and response-size limits must be implemented before exposing it publicly. No public-upload safety claim is made here.
 
 Next: add one controlled project-input workflow, with bounded safe extraction. ZIP uploads and public GitHub default-branch snapshots will feed that same workflow, followed by this engine. Then connect the React website to those results.
+
+The follow-up [review and AltF4 reference check](REVIEW-AND-REFERENCE.md) documents import edge-case fixes, the expanded 31-test suite, a pinned real-project snapshot, and a repeatable check command.

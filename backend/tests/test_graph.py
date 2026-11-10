@@ -1,4 +1,5 @@
 from itertools import product
+import random
 import unittest
 
 from app.graph import analyze_graph, circular_groups
@@ -9,6 +10,31 @@ def edges(*pairs):
 
 
 class GraphTests(unittest.TestCase):
+    def test_seeded_larger_graphs_against_transitive_closure(self):
+        randomizer = random.Random(583)
+        names = [str(number) for number in range(8)]
+        for _ in range(200):
+            pairs = [(a, b) for a in names for b in names if randomizer.random() < .18]
+            reachable = set(pairs)
+            for middle in names:
+                for source in names:
+                    for target in names:
+                        if (source, middle) in reachable and (middle, target) in reachable:
+                            reachable.add((source, target))
+            result = analyze_graph(names, edges(*pairs))
+            for target in names:
+                impact = result['impact'][target]
+                actual = set(impact['direct_dependents'] + impact['indirect_dependents'])
+                expected = {source for source in names if source != target and (source, target) in reachable}
+                self.assertEqual(actual, expected)
+                self.assertEqual(impact['affected_count'], len(expected))
+            expected_groups = set()
+            for node in names:
+                mutual = frozenset(other for other in names if (node, other) in reachable and (other, node) in reachable)
+                if mutual:
+                    expected_groups.add(mutual)
+            self.assertEqual({frozenset(group) for group in result['circular_dependency_groups']}, expected_groups)
+
     def test_chain_impact_follows_importers_not_imports(self):
         result = analyze_graph(['main.py', 'auth.py', 'database.py', 'alone.py'], edges(
             ('main.py', 'auth.py'), ('auth.py', 'database.py'),

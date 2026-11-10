@@ -18,6 +18,12 @@ def resolve_dependencies(files: list[dict]) -> dict:
         parts = list(path.with_suffix('').parts)
         if parts[-1] == '__init__':
             parts.pop()
+        # A dot inside a filename/directory is not a package separator. Such
+        # files can still be parsed, but ordinary import syntax cannot name
+        # that path. Do not invent edges by joining invalid path components.
+        if any(not part.isidentifier() for part in parts):
+            module_for_file[file['path']] = None
+            continue
         module = '.'.join(parts)
         module_for_file[file['path']] = module
         if module:
@@ -36,6 +42,8 @@ def resolve_dependencies(files: list[dict]) -> dict:
             if len(candidates) > 1:
                 return set(), 'ambiguous'
             if length < len(parts):
+                if not candidates and prefix not in namespaces:
+                    return set(), 'unresolved'
                 if candidates and not candidates[0].endswith('/__init__.py'):
                     return set(), 'unresolved'
                 targets.update(candidates)
@@ -50,7 +58,10 @@ def resolve_dependencies(files: list[dict]) -> dict:
     for file in files:
         source = file['path']
         own_module = module_for_file[source]
-        package = own_module if source.endswith('/__init__.py') else own_module.rpartition('.')[0]
+        package = (
+            own_module if source.endswith('/__init__.py')
+            else (own_module or '').rpartition('.')[0]
+        )
         for statement in file['imports']:
             for binding in statement['names']:
                 base = statement['module'] or ''
@@ -84,6 +95,11 @@ def resolve_dependencies(files: list[dict]) -> dict:
                                 targets, status = set(), 'ambiguous'
                             elif child_status == 'local':
                                 targets.update(child_targets)
+                            elif base not in modules:
+                                # A bare namespace has no __init__ to define
+                                # attributes. A missing child is not a match.
+                                targets = set()
+                                status = 'unresolved'
                 resolutions.append({
                     'source': source,
                     'line': statement['line'],

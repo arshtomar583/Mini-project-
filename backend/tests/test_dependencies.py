@@ -95,6 +95,57 @@ class DependencyTests(unittest.TestCase):
         self.assertEqual(self.edge_pairs(report), set())
         self.assertEqual(report['summary']['errors'], 1)
 
+    def test_dotted_filenames_are_not_invented_package_paths(self):
+        report = self.analyze_sources({
+            'main.py': 'import pkg.child\n',
+            'pkg.child.py': '',
+        })
+        self.assertEqual(self.edge_pairs(report), set())
+        self.assertEqual(report['dependencies']['imports'][0]['status'], 'unresolved')
+        self.assertEqual(report['summary']['files_analyzed'], 2)
+
+    def test_dotted_directory_does_not_impersonate_nested_packages(self):
+        report = self.analyze_sources({
+            'main.py': 'import pkg.child.module\n',
+            'pkg.child/module.py': '',
+        })
+        self.assertEqual(self.edge_pairs(report), set())
+        self.assertEqual(report['dependencies']['imports'][0]['status'], 'unresolved')
+
+    def test_missing_child_in_namespace_package_stays_unresolved(self):
+        report = self.analyze_sources({
+            'main.py': 'from pkg import missing\nfrom pkg import child\nimport pkg\n',
+            'pkg/child.py': '',
+        })
+        statuses = [item['status'] for item in report['dependencies']['imports']]
+        self.assertEqual(statuses, ['unresolved', 'local', 'local'])
+        self.assertEqual(self.edge_pairs(report), {('main.py', 'pkg/child.py')})
+
+    def test_module_filename_does_not_create_implicit_parent_namespace(self):
+        report = self.analyze_sources({
+            'main.py': 'import ghost\n',
+            'ghost.module.py': '',
+        })
+        self.assertEqual(report['dependencies']['imports'][0]['status'], 'unresolved')
+
+    def test_namespace_child_under_ordinary_module_is_not_importable(self):
+        report = self.analyze_sources({
+            'main.py': 'import pkg.child\n',
+            'pkg.py': '',
+            'pkg/child.py': '',
+        })
+        self.assertEqual(self.edge_pairs(report), set())
+        self.assertEqual(report['dependencies']['imports'][0]['status'], 'unresolved')
+
+    def test_namespace_missing_child_is_not_hidden_by_parent_initializer(self):
+        report = self.analyze_sources({
+            'main.py': 'from pkg.space import missing\n',
+            'pkg/__init__.py': '',
+            'pkg/space/child.py': '',
+        })
+        self.assertEqual(self.edge_pairs(report), set())
+        self.assertEqual(report['dependencies']['imports'][0]['status'], 'unresolved')
+
 
 if __name__ == '__main__':
     unittest.main()
