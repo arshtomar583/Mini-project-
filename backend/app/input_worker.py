@@ -28,7 +28,8 @@ def main():
         # input/timeout limits locally and a hosting memory cap in production.
         if sys.platform.startswith('linux'):
             import resource
-            resource.setrlimit(resource.RLIMIT_AS, (512 * 1024 * 1024,) * 2)
+            # Leave room for the API and temporary-file storage on a 512 MiB host.
+            resource.setrlimit(resource.RLIMIT_AS, (256 * 1024 * 1024,) * 2)
         payload = run(archive, extracted, sys.argv[4], sys.argv[5] == '1')
         serialized = json.dumps(payload, ensure_ascii=True)
         if len(serialized.encode()) > MAX_REPORT_BYTES:

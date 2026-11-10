@@ -4,7 +4,7 @@ Under development. A tool for exploring Python project structure, import depende
 
 ## Current status
 
-The analysis engine, ZIP upload API, public GitHub snapshot API, and React results explorer work locally. An interactive dependency map connects file selection to definitions, imports, potential impact, and circular groups. Public deployment and AI explanations are not implemented yet.
+The analysis engine, ZIP upload API, public GitHub snapshot API, and React results explorer work locally. An interactive dependency map connects file selection to definitions, imports, potential impact, and circular groups. AWS EC2 deployment files and automated checks are prepared; no public instance is running yet. AI explanations are not implemented.
 
 ## Structure
 
@@ -55,7 +55,7 @@ After analysis, explore the **Visual map**. Click a file box to select it, drag 
 
 ZIP uploads and public GitHub default-branch snapshots feed the same engine. The input limit is 5 MiB compressed, 25 MiB extracted, and 200 Python files; other limits are documented in PROJECT-INPUTS.md. An arrow A -> B means A imports B. Static analysis does not prove execution order or guarantee that a dependent module will break.
 
-Uploaded code is read without execution. The API uses checked extraction, bounded requests, disposable analysis workers, and temporary-file cleanup. Hosting protections and public verification remain deployment work.
+Uploaded code is read without execution. The API uses checked extraction, bounded requests, disposable analysis workers, and temporary-file cleanup. It admits one analysis at a time and at most 20 attempts per minute across the service. The EC2 configuration adds container limits and optional HTTPS; public verification remains deployment work.
 
 ## Run the first analyzer
 
@@ -72,7 +72,9 @@ Expected demo totals: 3 files, 3 functions, 0 classes, 2 import statements, 2 lo
 
 ## Next step
 
-Prepare and verify public deployment of the connected input, analysis, and visual exploration workflow.
+Create the AWS account, verify the eligible instance choice, and follow [the EC2 deployment walkthrough](docs/AWS-DEPLOYMENT.md). It explains costs that can continue while stopped, private verification, optional public HTTPS, and your start/stop routine.
+
+The root `Dockerfile` builds React and serves it through FastAPI on the same URL. `deploy/aws/compose.yaml` supplies runtime limits and restarts. `.github/workflows/checks.yml` runs tests and a Linux container check on pushes; it does not deploy or create cloud resources. Docker is not installed on this workstation, so container verification runs in GitHub Actions.
 
 ## Real-project reference check
 

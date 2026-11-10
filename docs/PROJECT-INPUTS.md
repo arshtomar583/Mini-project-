@@ -36,7 +36,7 @@ A blank source folder uses the project root after single-wrapper removal. User Z
 
 Success returns the existing schema-3 report plus `input` metadata. GitHub metadata contains repository URL, default branch, commit SHA, and source folder. ZIP metadata contains kind and source folder. Temporary paths and uploaded filenames are not included.
 
-Failures return `{"error":{"code":"...","message":"..."}}`: 413 for size limits, 422 for invalid project content, 404 for unavailable public repositories, 503 for busy/rate-limited service, 504 for download/analysis timeout, and 408 for slow uploads. Valid partial results use HTTP 200 with their error list.
+Input-handler failures return `{"error":{"code":"...","message":"..."}}`: 413 for size limits, 422 for invalid project content, 404 for unavailable public repositories, 429 for the service-wide request cap, 503 for busy/GitHub-rate-limited service, 504 for download/analysis timeout, and 408 for slow uploads. Gateway-level rejections can use the gateway's own error format. Valid partial results use HTTP 200 with their error list.
 
 ## GitHub snapshots
 
@@ -59,8 +59,9 @@ Implementation references: [GitHub references](https://docs.github.com/en/rest/g
 | Extraction + analysis worker | 15 seconds |
 | Worker report | 4 MiB |
 | Concurrent analyses | One per backend process; excess requests receive 503 |
+| Admitted analysis attempts | 20 per rolling minute per process, shared by all visitors; excess receives 429 with Retry-After |
 
-The browser allows 65 seconds for the whole request. GitHub metadata responses are bounded to 64 KiB. Linux workers cap address space at 512 MiB. Windows development uses file/runtime/output bounds; public hosting must supply an additional process/container memory cap.
+The browser allows 65 seconds for the whole request. GitHub metadata responses are bounded to 64 KiB. Linux workers cap address space at 256 MiB. Windows development uses file/runtime/output bounds. The EC2 Compose configuration additionally caps the app container at 512 MiB.
 
 ## Extraction and cleanup
 
@@ -68,11 +69,11 @@ Validate original archive names before writing. Reject traversal/absolute paths,
 
 Each request gets a unique temporary workspace. A trusted child process extracts and analyzes it. On timeout/cancellation the parent kills and awaits that worker before removing temporary files. Upload objects are closed. Success, failure, oversized-report, and real-timeout cleanup are tested. Machine/server crashes can bypass normal cleanup; deployment needs a stale-temp policy.
 
-These controls are not a claim that arbitrary hostile workloads are fully sandboxed or that the service supports unlimited traffic. Hosting memory caps, gateway body/rate limits, HTTPS, production verification, and stale-temp cleanup remain deployment work. Use one backend worker initially: concurrency locking is per process.
+These controls are not a claim that arbitrary hostile workloads are fully sandboxed or that the service supports unlimited traffic. The EC2 configuration supplies container limits, a disposable temporary filesystem, and an optional HTTPS gateway with a body limit. Account/hostname setup and live production verification remain; see AWS-DEPLOYMENT.md. Use one backend worker: concurrency locking and rate limiting are per process.
 
 ## Configuration
 
-Locally, Vite proxies `/api` to backend port 8000. For separate production hosts, set `VITE_API_BASE_URL` at frontend build time and `FRONTEND_ORIGINS` in the backend environment to the exact frontend origin. Frontend variables are public; do not put secrets there. Example `.env` files are documentation; the backend does not load them automatically.
+Locally, Vite proxies `/api` to backend port 8000. The Docker deployment keeps `VITE_API_BASE_URL` blank and serves the built frontend through FastAPI using `FRONTEND_DIST`, so UI and API share an origin. For deliberately separate production hosts, set `VITE_API_BASE_URL` at build time and `FRONTEND_ORIGINS` on the backend to the exact frontend origin. Frontend variables are public; do not put secrets there. Example `.env` files are documentation; the backend does not load them automatically.
 
 ## Verification
 

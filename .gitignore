@@ -236,6 +236,8 @@ dist/
 .env
 .env.*
 !.env.example
+*.pem
+*.key
 
 # Uploaded source and temporary results
 uploads/

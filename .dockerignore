@@ -1,0 +1,14 @@
+# Send only the files required by the Dockerfile to the builder.
+**
+!Dockerfile
+!backend/
+!backend/requirements.lock.txt
+!backend/app/
+!backend/app/*.py
+!frontend/
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/index.html
+!frontend/vite.config.js
+!frontend/src/
+!frontend/src/**

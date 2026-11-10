@@ -1,0 +1,6 @@
+{$APP_DOMAIN:localhost} {
+    request_body {
+        max_size 6MB
+    }
+    reverse_proxy app:10000
+}

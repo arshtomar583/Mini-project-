@@ -16,6 +16,7 @@ from app.github import download_github
 from app.input_errors import InputError
 from app.pipeline import analyze_archive
 from app.request_limits import InputRequestLimits
+from app.frontend import ResponseHeaders, mount_frontend
 
 class GitHubInput(BaseModel):
     repository_url: str = Field(max_length=300)
@@ -23,7 +24,7 @@ class GitHubInput(BaseModel):
 
 
 def create_app(workspace_parent: Path | None = None):
-    app = FastAPI(title='Explain This Codebase', version='0.2.0')
+    app = FastAPI(title='Explain This Codebase', version='0.3.0')
     app.add_middleware(InputRequestLimits)
     # Outer CORS middleware also covers early size/busy responses.
     app.add_middleware(
@@ -31,6 +32,7 @@ def create_app(workspace_parent: Path | None = None):
         allow_origins=[origin.strip() for origin in os.getenv('FRONTEND_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173').split(',') if origin.strip()],
         allow_methods=['GET', 'POST'], allow_headers=['Content-Type'],
     )
+    app.add_middleware(ResponseHeaders)
 
     @app.exception_handler(InputError)
     async def input_error(request, error):
@@ -75,6 +77,8 @@ def create_app(workspace_parent: Path | None = None):
             result = await analyze_archive(workspace / 'input.zip', workspace, body.source_root, strip_wrapper=True)
             return {**result['report'], 'input': {**metadata, 'source_root': result['source_root']}}
 
+    if directory := os.getenv('FRONTEND_DIST'):
+        mount_frontend(app, directory)
     return app
 
 
