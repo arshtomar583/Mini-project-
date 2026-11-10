@@ -6,9 +6,25 @@ import json
 import os
 import re
 import time
-from urllib.error import HTTPError, URLError
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 import zipfile
+
+
+def wait_for_health(request, wait_seconds: int):
+    deadline = time.monotonic() + wait_seconds
+    while True:
+        try:
+            status, _, body = request('/health')
+            if status == 200 and json.loads(body) == {'status': 'ok'}:
+                break
+        except (OSError, ValueError):
+            # Docker can accept a TCP connection before Uvicorn is listening,
+            # then reset it. Retry readiness only, never a submitted analysis.
+            pass
+        if time.monotonic() >= deadline:
+            raise RuntimeError('Health endpoint did not become ready.')
+        time.sleep(1)
 
 
 def check(base: str, wait_seconds: int, github: bool):
@@ -21,17 +37,7 @@ def check(base: str, wait_seconds: int, github: bool):
         with response:
             return response.status, response.headers, response.read()
 
-    deadline = time.monotonic() + wait_seconds
-    while True:
-        try:
-            status, _, body = request('/health')
-            if status == 200 and json.loads(body) == {'status': 'ok'}:
-                break
-        except (URLError, TimeoutError, ValueError):
-            pass
-        if time.monotonic() >= deadline:
-            raise RuntimeError('Health endpoint did not become ready.')
-        time.sleep(1)
+    wait_for_health(request, wait_seconds)
     status, headers, body = request('/')
     assert status == 200 and b'<div id="root"></div>' in body, 'Compiled website is missing'
     assert headers.get('Cache-Control') == 'no-cache'

@@ -38,4 +38,4 @@ The dependency map is now connected to file details, with whole-project, immedia
 
 ## AWS preparation milestone
 
-The selected host is AWS EC2, started for demonstrations and stopped afterward. A Docker build, bounded Compose service, optional Caddy HTTPS proxy, compiled-frontend serving, service-wide rate cap, deployment smoke checker, and GitHub Actions workflow are prepared. The local backend suite has 57 passing tests and the frontend has eight. Account creation, an instance, hostname setup, and live EC2 verification remain. See AWS-DEPLOYMENT.md; no AWS resources have been created.
+The selected host is AWS EC2, started for demonstrations and stopped afterward. A Docker build, bounded Compose service, optional Caddy HTTPS proxy, compiled-frontend serving, service-wide rate cap, deployment smoke checker, and GitHub Actions workflow are prepared. The local backend suite has 59 passing tests and the frontend has eight. Account creation, an instance, hostname setup, and live EC2 verification remain. See AWS-DEPLOYMENT.md; no AWS resources have been created.
