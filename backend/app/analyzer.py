@@ -10,6 +10,8 @@ import os
 from pathlib import Path
 import tokenize
 
+from app.dependencies import resolve_dependencies
+
 
 IGNORED_DIRECTORIES = {
     '.git', '.venv', 'venv', 'env', '__pycache__', 'node_modules',
@@ -87,7 +89,7 @@ def analyze_project(project_path: str | Path) -> dict:
     """Analyze a local directory, reporting unreadable or invalid files separately.
 
     This is a local development tool. Resource limits must be added before using
-    the analyzer with public uploads. Import resolution is a later milestone.
+    the analyzer with public uploads. The input folder is the import root.
     """
     root = Path(project_path).resolve()
     if not root.is_dir():
@@ -122,8 +124,9 @@ def analyze_project(project_path: str | Path) -> dict:
 
     files.sort(key=lambda item: item['path'])
     errors.sort(key=lambda item: item['path'])
+    dependencies = resolve_dependencies(files)
     return {
-        'schema_version': 1,
+        'schema_version': 2,
         'summary': {
             'files_found': len(files) + sum(error['path'].endswith('.py') for error in errors),
             'files_analyzed': len(files),
@@ -131,9 +134,12 @@ def analyze_project(project_path: str | Path) -> dict:
             'classes': sum(len(file['classes']) for file in files),
             'import_statements': sum(len(file['imports']) for file in files),
             'errors': len(errors),
+            'local_dependencies': len(dependencies['edges']),
+            'unresolved_imports': sum(item['status'] != 'local' for item in dependencies['imports']),
         },
         'files': files,
         'errors': errors,
+        'dependencies': dependencies,
     }
 
 

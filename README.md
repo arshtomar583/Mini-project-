@@ -4,7 +4,7 @@ Under development. A tool for exploring Python project structure, import depende
 
 ## Current status
 
-Working local AST analyzer, a FastAPI health endpoint, and a React welcome screen. The analyzer extracts named functions, classes, imports, and source locations. Uploads, import resolution, graphs, and AI explanations are not implemented yet.
+Working local AST analyzer and import resolver, a FastAPI health endpoint, and a React welcome screen. The analyzer extracts definitions, imports, source locations, and potential dependencies between local files. Uploads, interactive graphs, impact analysis, and AI explanations are not implemented yet.
 
 ## Structure
 
@@ -65,8 +65,8 @@ cd backend
 .venv/Scripts/python.exe -m unittest discover -s tests -v
 ```
 
-Expected demo totals: 3 files, 3 functions, 0 classes, 2 import statements, 0 errors. See [the walkthrough](docs/FIRST-ANALYZER.md) for explanations and limitations.
+Expected demo totals: 3 files, 3 functions, 0 classes, 2 import statements, 2 local dependency edges, 0 unresolved imports, 0 errors. See [the AST walkthrough](docs/FIRST-ANALYZER.md) and [import resolution walkthrough](docs/IMPORT-RESOLUTION.md) for explanations and limitations.
 
 ## Next step
 
-Resolve import statements to local Python files, then construct the dependency graph.
+Use the dependency edges to calculate potential change impact and circular dependency groups.

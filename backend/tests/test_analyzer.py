@@ -14,6 +14,7 @@ class AnalyzerTests(unittest.TestCase):
         self.assertEqual(result['summary'], {
             'files_found': 3, 'files_analyzed': 3, 'functions': 3,
             'classes': 0, 'import_statements': 2, 'errors': 0,
+            'local_dependencies': 2, 'unresolved_imports': 0,
         })
         auth = next(file for file in result['files'] if file['path'] == 'auth.py')
         self.assertEqual(auth['imports'][0]['module'], 'database')

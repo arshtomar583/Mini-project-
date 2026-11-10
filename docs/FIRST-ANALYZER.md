@@ -40,6 +40,6 @@ Checks cover our demo, nested definitions, async functions, import aliases, rela
 
 ## What comes next
 
-We record that `auth.py` imports `database`, but do not yet resolve that import to `database.py`. Resolving imports is the next milestone, followed by dependency graph construction. The analyzer does not establish execution order, detect unused imports, or answer natural-language questions.
+The first milestone extracted imports without matching them. That matching step is now implemented: see [step 2](IMPORT-RESOLUTION.md). The analyzer does not establish execution order, detect unused imports, or answer natural-language questions.
 
 This command is for trusted local development inputs. Before using it with public uploads, add extraction safety checks, file and byte limits, analysis time limits, and cleanup. There is deliberately no API accepting arbitrary local folder paths.

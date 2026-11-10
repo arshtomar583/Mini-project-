@@ -20,6 +20,6 @@ Some folder, Git metadata, and local network operations failed under restricted 
 
 ## Current application scope
 
-The frontend is a welcome screen and is not connected to the API yet. The local AST analyzer now extracts functions, classes, imports, and locations. Five behavior tests passed, and the demo returned the expected counts. There is no upload support or deployment. Next milestone: local import resolution.
+The frontend is a welcome screen and is not connected to the API yet. The local analyzer extracts functions, classes, imports, and locations, then resolves potential file dependencies. Thirteen behavior tests passed, and the demo returned two expected dependency edges. There is no upload support or deployment. Next milestone: impact and cycle analysis.
 
 VS Code initially showed a different clone at D:/Mini project/Mini-project-. It was switched to this chat's working folder at C:/Users/arsht/OneDrive/Documents/ChatGPT/Mini project, and the starter folders were verified in its Explorer. Use this folder for ongoing work to avoid confusing the two copies.
