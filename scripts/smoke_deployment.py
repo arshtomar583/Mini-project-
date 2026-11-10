@@ -3,6 +3,7 @@
 import argparse
 import io
 import json
+import os
 import re
 import time
 from urllib.error import HTTPError, URLError
@@ -76,4 +77,10 @@ if __name__ == '__main__':
     parser.add_argument('--wait-seconds', type=int, default=0)
     parser.add_argument('--github', action='store_true', help='Also check the public AltF4 download (uses GitHub rate limits)')
     args = parser.parse_args()
-    check(args.url.rstrip('/'), args.wait_seconds, args.github)
+    try:
+        check(args.url.rstrip('/'), args.wait_seconds, args.github)
+    except Exception as error:
+        if os.getenv('GITHUB_ACTIONS') == 'true':
+            message = str(error).replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+            print(f'::error title=Deployment smoke check::{message}', flush=True)
+        raise

@@ -55,6 +55,14 @@ jobs:
       - name: Show container logs
         if: always()
         run: docker logs codebase-check
+      - name: Expose failed container diagnostics in check annotations
+        if: failure()
+        shell: python
+        run: |
+          import subprocess
+          result = subprocess.run(['docker', 'logs', '--tail', '50', 'codebase-check'], capture_output=True, text=True)
+          message = (result.stdout + result.stderr).replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print(f'::error title=Container failure details::{message}')
       - name: Stop test container
         if: always()
         run: docker rm -f codebase-check
