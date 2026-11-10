@@ -64,4 +64,4 @@ The suite covers aliases, repeated imports, namespace packages, package initiali
 
 ## Next milestone
 
-Use the edges to answer which files directly or indirectly depend on a selected file, and detect circular dependency groups. Then expose analysis through a controlled API workflow and build the visual graph.
+Impact and circular-group analysis are now implemented: see [the engine walkthrough](ANALYSIS-ENGINE.md). Next, expose analysis through a controlled project-input/API workflow and build the visual graph.

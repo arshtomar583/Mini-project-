@@ -20,6 +20,6 @@ Some folder, Git metadata, and local network operations failed under restricted 
 
 ## Current application scope
 
-The frontend is a welcome screen and is not connected to the API yet. The local analyzer extracts functions, classes, imports, and locations, then resolves potential file dependencies. Thirteen behavior tests passed, and the demo returned two expected dependency edges. There is no upload support or deployment. Next milestone: impact and cycle analysis.
+The frontend is a welcome screen and is not connected to the API yet. The local engine extracts structure, matches supported local imports, builds file graphs, calculates potential impact, and detects circular groups. The demo identifies auth.py as a direct dependent of database.py and main.py as indirect. A separate circular example includes alpha.py and beta.py, plus an isolated file. See ANALYSIS-ENGINE.md for the current commands, test coverage, report format, and limitations. There is no upload support or deployment. Next milestone: bounded safe input handling for ZIPs and public GitHub snapshots.
 
 VS Code initially showed a different clone at D:/Mini project/Mini-project-. It was switched to this chat's working folder at C:/Users/arsht/OneDrive/Documents/ChatGPT/Mini project, and the starter folders were verified in its Explorer. Use this folder for ongoing work to avoid confusing the two copies.

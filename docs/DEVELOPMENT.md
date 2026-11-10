@@ -3,16 +3,16 @@
 ## Responsibilities
 
 - Backend: receive requests and coordinate analysis.
-- Analyzer (next): parse source with ast without importing or executing it.
+- Analyzer: parse source with ast, resolve supported imports, and calculate graph results without importing or executing the analyzed source.
 - Frontend: display analysis results and support exploration.
 - Example: predictable input for checking analyzer results.
 
 ## Milestones
 
-1. Extract functions, classes, and imports with file and line locations.
-2. Resolve local imports and construct a directed module graph.
-3. Calculate reverse dependencies and circular relationships.
-4. Accept ZIP files with safe extraction and resource limits.
+1. Done: extract functions, classes, and imports with file and line locations.
+2. Done: resolve supported local imports and construct a directed file graph.
+3. Done: calculate potential impact and circular dependency groups.
+4. Next: accept ZIP files and public GitHub repository snapshots with shared safe extraction and resource limits.
 5. Connect React to the API and add a graph view.
 6. Deploy, verify behavior, and document limitations.
 

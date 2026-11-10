@@ -4,12 +4,12 @@ Under development. A tool for exploring Python project structure, import depende
 
 ## Current status
 
-Working local AST analyzer and import resolver, a FastAPI health endpoint, and a React welcome screen. The analyzer extracts definitions, imports, source locations, and potential dependencies between local files. Uploads, interactive graphs, impact analysis, and AI explanations are not implemented yet.
+The first local analysis engine is complete: AST structure, supported local imports, a file graph, potential change impact, and circular dependency groups. A FastAPI health endpoint and React welcome screen also exist. ZIP/GitHub inputs, an analysis API, interactive graph UI, and AI explanations are not implemented yet.
 
 ## Structure
 
 ```text
-backend/             Python API and future analyzer
+backend/             Python API and local analysis engine
 frontend/            React interface
 examples/demo_project/ Small Python project for learning and validation
 docs/                Design notes and development plan
@@ -62,11 +62,12 @@ From the project folder:
 ```powershell
 cd backend
 .venv/Scripts/python.exe -m app.analyzer ../examples/demo_project
+.venv/Scripts/python.exe -m app.analyzer ../examples/demo_project --format text --impact database.py
 .venv/Scripts/python.exe -m unittest discover -s tests -v
 ```
 
-Expected demo totals: 3 files, 3 functions, 0 classes, 2 import statements, 2 local dependency edges, 0 unresolved imports, 0 errors. See [the AST walkthrough](docs/FIRST-ANALYZER.md) and [import resolution walkthrough](docs/IMPORT-RESOLUTION.md) for explanations and limitations.
+Expected demo totals: 3 files, 3 functions, 0 classes, 2 import statements, 2 local dependency edges, 0 unresolved imports, 0 circular groups, 0 errors. Changing database.py potentially affects auth.py directly and main.py indirectly. See [the engine walkthrough](docs/ANALYSIS-ENGINE.md), [AST walkthrough](docs/FIRST-ANALYZER.md), and [import resolution walkthrough](docs/IMPORT-RESOLUTION.md).
 
 ## Next step
 
-Use the dependency edges to calculate potential change impact and circular dependency groups.
+Add safe, bounded project ingestion for ZIP uploads and public GitHub default-branch snapshots, then connect the analysis API and visual interface. Both input methods will share extraction and analysis logic.

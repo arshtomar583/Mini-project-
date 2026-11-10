@@ -15,10 +15,16 @@ class AnalyzerTests(unittest.TestCase):
             'files_found': 3, 'files_analyzed': 3, 'functions': 3,
             'classes': 0, 'import_statements': 2, 'errors': 0,
             'local_dependencies': 2, 'unresolved_imports': 0,
+            'circular_dependency_groups': 0, 'files_in_circular_groups': 0,
         })
         auth = next(file for file in result['files'] if file['path'] == 'auth.py')
         self.assertEqual(auth['imports'][0]['module'], 'database')
         self.assertEqual(auth['functions'][0]['name'], 'login')
+        self.assertEqual(result['schema_version'], 3)
+        self.assertEqual(result['analysis_status'], 'complete')
+        self.assertEqual(result['impact']['database.py'], {
+            'direct_dependents': ['auth.py'], 'indirect_dependents': ['main.py'], 'affected_count': 2,
+        })
 
     def test_scopes_async_aliases_and_relative_imports(self):
         with TemporaryDirectory() as folder:
@@ -52,6 +58,7 @@ class AnalyzerTests(unittest.TestCase):
             self.assertEqual(result['summary']['files_found'], 3)
             self.assertEqual(result['summary']['files_analyzed'], 1)
             self.assertEqual(result['summary']['errors'], 2)
+            self.assertEqual(result['analysis_status'], 'partial')
             self.assertEqual(result['files'][0]['functions'][0]['name'], 'safe')
 
     def test_ignored_folders_and_non_python_files(self):
