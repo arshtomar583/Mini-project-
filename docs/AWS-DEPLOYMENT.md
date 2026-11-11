@@ -2,7 +2,7 @@
 
 ## Current status
 
-On 11 November 2026, the app was installed and verified privately on an Amazon Linux 2023 t3.micro instance in Sydney. ZIP analysis and a live GitHub analysis of AltF4 passed on EC2. The app container is healthy. Public HTTPS is prepared but still awaits the EC2 inbound HTTP/HTTPS rules and successful certificate issuance. No AWS credentials are needed in the app or its GitHub repository.
+On 11 November 2026, the app went live over HTTPS on an Amazon Linux 2023 t3.micro instance in Sydney. Public ZIP and GitHub analysis passed, and the dependency map rendered in the browser. Open the [live demo](https://explain-codebase.13-54-188-194.sslip.io/) while the instance is running.
 
 The initial hostname selected for the demo is `explain-codebase.13-54-188-194.sslip.io`. It resolves to the current public IP without domain registration. The public URL must change if the instance receives a different public IP after stop/start. This is a shared DNS service, not a personally registered domain. See [the DNS provider's explanation](https://sslip.io/).
 
@@ -116,7 +116,7 @@ The smoke checker verifies health, the compiled website and assets, correct API 
 
 ## 4. Add the public HTTPS address
 
-Choose a domain or a free DNS hostname you control; a purchased domain is optional. The setup below expects that hostname's A record to point to the current EC2 public IPv4 address. Avoid an AAAA record unless IPv6 is also configured and reachable. We will select the hostname provider together after the server works.
+The demo uses the shared `sslip.io` DNS service. It resolves a hostname containing the public IPv4 address to that address automatically. With a domain you manage, point its A record to the instance's current public IPv4 address. Use an AAAA record only if IPv6 is configured and reachable.
 
 On EC2, from the repository root:
 
@@ -143,9 +143,9 @@ After a demo, use **EC2 → Instances → select this instance → Instance stat
 Before a demo:
 
 1. Start the same EC2 instance and wait for its status checks.
-2. Read its current public IP. Update the hostname's DNS A record if it changed and allow DNS caches to expire.
+2. Read its current public IP. If it changed, update `APP_DOMAIN` in `deploy/aws/.env`. For `sslip.io`, replace the IP in the hostname, using hyphens in place of dots. For a domain you manage, update its A record and allow DNS caches to expire.
 3. Connect by SSH using that IP; update the SSH security-group source if your own IP changed.
-4. Docker starts with the OS. Containers configured with `restart: unless-stopped` restart unless you explicitly stopped them with Docker previously.
+4. Docker starts with the OS. If you changed `APP_DOMAIN` or explicitly stopped the proxy, run `sudo docker compose --env-file deploy/aws/.env -f deploy/aws/compose.yaml --profile public up -d --no-build` from the project directory to apply the hostname and start the service.
 5. Check `docker compose ps`, the health endpoint, and the smoke checker before sharing the link. If you used Compose `down`, run the appropriate `up -d` command again.
 
 An expired HTTPS certificate may need renewal after a long shutdown. Keep DNS and ports 80/443 correct and wait for successful certificate issuance; don't promise an immediately working link after every restart.
@@ -180,4 +180,4 @@ The app container has a 512 MiB memory cap, a process limit, a read-only filesys
 
 ## Verification boundary
 
-The repository's local verification and GitHub Actions results are separate from AWS verification. The Linux CI container check succeeded before EC2 setup. On EC2, the compiled site/assets, real ZIP worker, impact results, error responses, cache headers, and AltF4 download all passed. DNS resolves to the instance. The app is healthy, but external connections to ports 80/443 timed out; the certificate authority reported the same timeout. The HTTPS proxy was paused to avoid repeated certificate attempts while inbound rules are configured. Start it with the public Compose command after allowing those two web ports. Certificate issuance, public browser checks, and a real stop/start cycle remain to be verified.
+The Linux CI container check succeeded before EC2 setup. On 11 November 2026, the public deployment passed certificate validation, HTTP-to-HTTPS redirect, website and asset serving, ZIP analysis, impact calculation, and the AltF4 download. AltF4 returned 53 Python files and 167 dependency connections. The live browser rendered the graph with no console errors. A full EC2 stop/start cycle remains to be tested.

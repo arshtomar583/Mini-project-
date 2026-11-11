@@ -4,7 +4,7 @@ Under development. A tool for exploring Python project structure, import depende
 
 ## Current status
 
-The analysis engine, ZIP upload API, public GitHub snapshot API, and React results explorer work locally and in a verified private deployment on AWS EC2. An interactive dependency map connects file selection to definitions, imports, potential impact, and circular groups. Public HTTPS still awaits web firewall rules and certificate verification. AI explanations are not implemented.
+The analysis engine, ZIP upload API, public GitHub snapshot API, and React results explorer work locally and on AWS EC2 over HTTPS. An interactive dependency map connects file selection to definitions, imports, potential impact, and circular groups. Open the [live demo](https://explain-codebase.13-54-188-194.sslip.io/) while the EC2 instance is running.
 
 ## Structure
 
@@ -72,7 +72,7 @@ Expected demo totals: 3 files, 3 functions, 0 classes, 2 import statements, 2 lo
 
 ## Next step
 
-Finish the inbound web rules and public HTTPS verification using [the EC2 deployment walkthrough](docs/AWS-DEPLOYMENT.md). It includes the actual Amazon Linux setup, costs that can continue while stopped, private verification, and your start/stop routine.
+Use the [EC2 deployment walkthrough](docs/AWS-DEPLOYMENT.md) for the Amazon Linux setup, live verification, and start/stop routine. The demo hostname contains the current public IP and may change when the instance restarts.
 
 The root `Dockerfile` builds React and serves it through FastAPI on the same URL. `deploy/aws/compose.yaml` supplies runtime limits and restarts. `.github/workflows/checks.yml` runs tests and a Linux container check on pushes; it does not deploy or create cloud resources. Docker is not installed on this workstation, so container verification runs in GitHub Actions.
 
